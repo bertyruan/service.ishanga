@@ -1,0 +1,19 @@
+<addon id="script.ishanga" name="Ishanga" version="0.0.1" provider-name="KK">
+    <requires>
+        <import addon="xbmc.python" version="3.0.0" />
+        <!-- <import addon="script.module.codequick" version="0.9.0"/> -->
+    </requires>
+    <extension point="xbmc.service" library="main.py"/>
+
+  <extension point="xbmc.python.library" library="utilities.py"/>
+
+    <extension point="xbmc.addon.metadata">
+        <platform>all</platform>
+        <assets>
+            <icon>resources/icon.png</icon>
+            <fanart>resources/fanart.png></fanart>
+        </assets>
+        <summary>An addon for Ishangas</summary>
+        <description>For a video playlist, after a video ends, stop the playlist and show the screensaver. After some user input, play the next video</description>
+    </extension>
+</addon>
