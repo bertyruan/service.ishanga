@@ -1,25 +1,78 @@
 import xbmc
 import xbmcgui
 import xbmcaddon
-from inputs import get_key
+from enum import Enum
 
 addon = xbmcaddon.Addon()
 addon_path = addon.getAddonInfo("path")
 addon_name = addon.getAddonInfo("name")
 
-monitor = xbmc.Monitor()
 log_info = xbmc.LOGINFO
 ishanga = 'Ishanga Service:'
-# xbmc.executebuiltin('ActivateScreensaver')
-# xbmcgui.Dialog().ok(addon_name, "Namaskaram Ishanga")
+
 xbmc.log("Ishanga service successfully booted")
 
 
+class VideoStatus(Enum):
+    UNAVAILABLE = 0
+    PLAYING = 1
+    PAUSED =  2
+    ENDED = 3
+
+status = VideoStatus.UNAVAILABLE
+
+class MonitorScreenSaver(xbmc.Monitor):
+    def __init__(self, status, player):
+        xbmc.log(f"{ishanga} init monitor screen saver", log_info)
+        self.status = status
+        self.player = player
+
+    def onScreensaverDeactivated(self):
+        xbmc.log(f"{ishanga} video status is {self.status['value']}", log_info)
+        if self.status['value'] == VideoStatus.PAUSED:
+            xbmc.log(f"{ishanga} trying to unpause", log_info)
+            self.player.resumePlayer()
+        
+            
 class XBMCPlayer(xbmc.Player):   
-    def onPlayBackStarted(self, *file):
+    def __init__(self, status):
+        self.status = status
+        self.playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
+        self.currentVideo = self.playlist.getposition()
+        self.playListId = self.playlist.getPlayListId()
+
+    def onPlayBackStarted(self):
+        xbmc.log(f"{ishanga} PLAYBACK STARTED", log_info)
+        self.currentVideo = self.playlist.getposition()
         xbmc.Player.pause(self)
+       
+    def onPlayBackPaused(self):
+        self.status['value'] = VideoStatus.PAUSED
         xbmc.executebuiltin('ActivateScreensaver')
-        xbmc.log(f"{ishanga} video paused and screensaver is activated", log_info)
+        xbmc.log(f"{ishanga} PLAYBACK PAUSED. Screensaver is activated", log_info)
+
+    def onPlayBackEnded(self):
+        xbmc.log(f"{ishanga} PLAYBACK ENDED", log_info)
+        self.status['value'] = VideoStatus.ENDED
+        # xbmc.Player.playnext(self)
+
+    def resumePlayer(self):
+        xbmc.log(f"{ishanga} PLAYBACK RESUMED", log_info)
+        self.status['value'] = VideoStatus.PLAYING
+        xbmc.Player.play(self, item=self.playlist, startpos=self.currentVideo)
+        
+
+if __name__ == '__main__':
+    xbmc.log(f"{ishanga} successfully booted", log_info)
+    status = {
+        'value': VideoStatus.UNAVAILABLE,
+    }
+    player = XBMCPlayer(status)
+
+    ss_monitor = MonitorScreenSaver(status, player)
+    while not ss_monitor.abortRequested():
+        if ss_monitor.waitForAbort(1):
+            xbmc.log(f"{ishanga} shutting down", log_info)
     
     # def onPlayBackPaused(self): 
     #     xbmc.log(f"Hello world", log_info)
@@ -50,10 +103,3 @@ class XBMCPlayer(xbmc.Player):
     #     xbmc.Player.playnext(self)
 
 
-        
-if __name__ == '__main__':
-    xbmc.log(f"{ishanga} successfully booted")
-    player = XBMCPlayer()
-    while not monitor.abortRequested():
-        if monitor.waitForAbort(1):
-            xbmc.log(f"{ishanga} shutting down", log_info)
