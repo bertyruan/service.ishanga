@@ -4,6 +4,9 @@ import xbmcgui
 log_info = xbmc.LOGINFO
 ishanga = 'Ishanga Service:'
 
+# try ActivateWindow(1200) for custom window, InhibitScreensaver(true/false)
+# try xbmcgui.Window(10025).onAction(self, action)
+
 class XBMCPlayer(xbmc.Player):
     def onPlayBackStarted(self):
         xbmc.log(f"{ishanga} PLAYBACK STARTED", log_info)
