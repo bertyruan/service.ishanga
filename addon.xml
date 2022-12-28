@@ -4,8 +4,8 @@
         <!-- <import addon="script.module.codequick" version="0.9.0"/> -->
     </requires>
     <extension point="xbmc.service" library="main.py"/>
-
-  <extension point="xbmc.python.library" library="utilities.py"/>
+    <extension point="xbmc.python.script" library="video-keyboard.py" />
+    <extension point="xbmc.python.library" library="utilities.py"/>
 
     <extension point="xbmc.addon.metadata">
         <platform>all</platform>
