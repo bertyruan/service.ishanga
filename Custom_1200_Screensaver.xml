@@ -1,0 +1,9 @@
+<!-- Placed in
+    kodi-install\addons\skin.simple\xml
+ -->
+
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<window id="1200" type="window">
+    <backgroundcolor>black</backgroundcolor>
+    <stretchmode>Fullscreen</stretchmode>
+</window>
