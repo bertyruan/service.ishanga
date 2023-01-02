@@ -7,6 +7,18 @@
     <extension point="xbmc.python.script" library="video-keyboard.py" />
     <extension point="xbmc.python.library" library="utilities.py"/>
 
+    <extension point="kodi.context.item">
+        <menu id="kodi.core.main">
+            <item library="context-menu.py">
+                <label>Play Ishanga Mode</label>
+                <!-- 
+                    documentation on conditional visibility here https://kodi.wiki/view/List_of_boolean_conditions
+                 -->
+                <visible>Container.HasFolders</visible>
+            </item>
+        </menu>
+    </extension>
+
     <extension point="xbmc.addon.metadata">
         <platform>all</platform>
         <assets>

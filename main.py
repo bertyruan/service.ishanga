@@ -33,8 +33,6 @@ def parse_media_type(filename):
     return MediaType.VIDEO
 
 def activate_window(window_id, media_type):
-    
-
     if media_type == MediaType.AUDIO:
         xbmc.executebuiltin('Dialog.Close(all, true)')
         xbmc.executebuiltin(f'ActivateWindow({screensaver_window})')
