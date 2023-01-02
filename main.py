@@ -11,44 +11,67 @@ ishanga = 'Ishanga Service:'
 screensaver_window = 1200
 video_window = 12005
 
+class MediaType:
+    NONE = 0
+    VIDEO = 1
+    AUDIO = 2
+
+AudioExtensions = ['.mp3']
+
 def log(file, text):
     xbmc.log(f"{file}: {text}", xbmc.LOGINFO)
 
-def activate_window(window_id):
+def parse_media_type(filename):
+    idx = filename.rfind('.')
+    file_ext = filename[idx:]
+    
+    log(ishanga, file_ext)
+
+    if AudioExtensions.count(file_ext):
+        log(ishanga, "AN AUDIO FILE IS PLAYING")
+        return MediaType.AUDIO
+    return MediaType.VIDEO
+
+def activate_window(window_id, media_type):
+    if media_type == MediaType.AUDIO:
+        xbmc.executebuiltin(f'ActivateWindow({screensaver_window})')
+        return
+
     if not xbmcgui.getCurrentWindowId() == window_id: 
         xbmc.executebuiltin('Dialog.Close(all, true)')
         xbmc.executebuiltin(f'ActivateWindow({window_id})')
 
+
+
 class XBMCPlayer(xbmc.Player):
+    def __init__(self):
+        super().__init__()
+        self.media_type = MediaType.NONE
+
     def onPlayBackStarted(self):
-        log(ishanga, f"playlist id {xbmc.PlayList(xbmc.PLAYLIST_VIDEO).getPlayListId()}") 
         log(ishanga, "PLAYBACK STARTED")
-        activate_window(screensaver_window)
+        filename = xbmc.Player().getPlayingFile()
+        self.media_type = parse_media_type(filename)
+        activate_window(screensaver_window, self.media_type)
         xbmc.Player.pause(self)     
 
     def onPlayBackPaused(self):
-        activate_window(screensaver_window)
+        activate_window(screensaver_window, self.media_type)
         log(ishanga, "VIDEO IS PAUSED. SCREENSAVER ON")
 
     def onPlayBackResumed(self):
-        activate_window(video_window)
+        activate_window(video_window, self.media_type)
 
     def onPlayBackSeek(self, time, seekOffset):
         # xbmc.Player.pause(self)
         log(ishanga, "PLAYBACK SEEK")
-        activate_window(video_window)
-
+        activate_window(video_window, self.media_type)
         
 if __name__ == '__main__':
     log(ishanga,  "SUCCESSFULLY BOOTED")
     xbmc.executebuiltin('InhibitScreensaver(true)')
     xbmc.executebuiltin('InhibitIdleShutdown(true)')
-    
-    # base_url = sys.argv[0]
-    # addon_handle = int(sys.argv[1])
-    # args =  sys.argv[2]
-    # log(ishanga, f"{base_url}, {addon_handle}, {args}")
-    log(ishanga, sys.argv)
+
     player = XBMCPlayer()
     monitor = xbmc.Monitor()
     while not monitor.abortRequested():
