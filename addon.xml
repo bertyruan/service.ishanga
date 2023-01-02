@@ -14,7 +14,7 @@
                 <!-- 
                     documentation on conditional visibility here https://kodi.wiki/view/List_of_boolean_conditions
                  -->
-                <visible>Container.HasFolders</visible>
+                <visible>Container.HasFolders | Container.HasFiles</visible>
             </item>
         </menu>
     </extension>
