@@ -2,7 +2,7 @@ import xbmc
 import xbmcgui
 import sys 
 
-ishanga = 'Ishanga Service:'
+
 # file:///D:/berty/isha-foundation/kodi/docs/html/df/dce/group__python__xbmcgui.html#gadb269db9ee11dfa03817f1585b0b1895
 
 # from my code's side the screensaver skin's window id is 1200
@@ -10,13 +10,13 @@ ishanga = 'Ishanga Service:'
 # ¯\_(ツ)_/¯
 screensaver_window = 1200
 video_window = 12005
+AudioExtensions = ['.mp3']
+ishanga = 'Ishanga Service:'
 
 class MediaType:
     NONE = 0
     VIDEO = 1
     AUDIO = 2
-
-AudioExtensions = ['.mp3']
 
 def log(file, text):
     xbmc.log(f"{file}: {text}", xbmc.LOGINFO)
@@ -67,6 +67,7 @@ class XBMCPlayer(xbmc.Player):
         # xbmc.Player.pause(self)
         log(ishanga, "PLAYBACK SEEK")
         activate_window(video_window, self.media_type)
+
         
 if __name__ == '__main__':
     log(ishanga,  "SUCCESSFULLY BOOTED")

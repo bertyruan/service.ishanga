@@ -1,7 +1,6 @@
 <addon id="script.ishanga" name="Ishanga" version="0.0.1" provider-name="KK">
     <requires>
         <import addon="xbmc.python" version="3.0.0" />
-        <!-- <import addon="script.module.codequick" version="0.9.0"/> -->
     </requires>
     <extension point="xbmc.service" library="main.py"/>
     <extension point="xbmc.python.script" library="video-keyboard.py" />
@@ -11,9 +10,6 @@
         <menu id="kodi.core.main">
             <item library="context-menu.py">
                 <label>Play Ishanga Mode</label>
-                <!-- 
-                    documentation on conditional visibility here https://kodi.wiki/view/List_of_boolean_conditions
-                 -->
                 <visible>Container.HasFolders | Container.HasFiles</visible>
             </item>
         </menu>

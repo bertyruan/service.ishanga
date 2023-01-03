@@ -5,11 +5,6 @@ import xbmcgui
 def log(file, text):
     xbmc.log(f"{file}: {text}", xbmc.LOGINFO)
 
-
-
-
-
-
 keyboard_script = 'Ishanga Keyboard Script:'
 screensaver_window = 11200
 video_window = 12005
