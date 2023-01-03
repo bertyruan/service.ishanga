@@ -5,6 +5,7 @@ import sys
 import os
 import re
 from resources.lib import utilities as util
+from resources.lib import XBMCPlayer
 
 context_menu = "Ishanga Context Menu: "
 
@@ -26,7 +27,7 @@ def get_player_offset(path, file_idx):
     
 
 def startPlaylist():
-    # XBMCPlayer()
+    
     path = sys.listitem.getPath()
     file_idx = path.rfind('/')
     file_idx = file_idx if file_idx >= 0 else path.rfind('\\')
