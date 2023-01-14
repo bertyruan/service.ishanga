@@ -11,6 +11,18 @@
 
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <window id="1200" type="window">
+    <controls>
+        <control type="group">
+            <control type="label">
+                <description>Ishanga White Dot</description>
+                <left>1850</left>
+                <top>1000</top>
+                <label>.</label>
+                <text_color>white</text_color>
+                <font>font52_title</font>
+            </control>
+        </control>
+    </controls>
     <backgroundcolor>black</backgroundcolor>
     <stretchmode>Fullscreen</stretchmode>
 </window>

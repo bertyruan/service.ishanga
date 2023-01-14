@@ -1,6 +1,6 @@
 import xbmc
 import xbmcgui
-from . import utilities as util
+from resources.lib import utilities as util
 
 ishanga = "Ishanga Player Service: "
 AudioExtensions = ['.mp3']
@@ -31,8 +31,6 @@ def activate_window(window_id, media_type):
         xbmc.executebuiltin('Dialog.Close(all, true)')
         xbmc.executebuiltin(f'ActivateWindow({window_id})')
 
-
-
 class XBMCPlayer(xbmc.Player):
     def __init__(self):
         super().__init__()
@@ -40,8 +38,13 @@ class XBMCPlayer(xbmc.Player):
 
     def onPlayBackStarted(self):
         util.log(ishanga, "PLAYBACK STARTED")
+        xbmc.executebuiltin('InhibitScreensaver(true)')
         filename = xbmc.Player().getPlayingFile()
         self.media_type = parse_media_type(filename)
+
+        activate_window(util.IshangaWindowId.screensaver_window, self.media_type)
+        activate_window(util.IshangaWindowId.screensaver_window, self.media_type)
+        activate_window(util.IshangaWindowId.screensaver_window, self.media_type)
         activate_window(util.IshangaWindowId.screensaver_window, self.media_type)
         xbmc.Player.pause(self)     
 
@@ -57,4 +60,5 @@ class XBMCPlayer(xbmc.Player):
         util.log(ishanga, "PLAYBACK SEEK")
         activate_window(util.KodiWindowId.video_window, self.media_type)
 
-XBMCPlayer()
+    def onPlayBackEnded(self):
+        xbmc.executebuiltin('InhibitScreensaver(false)')
