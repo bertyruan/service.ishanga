@@ -7,5 +7,6 @@
 <advancedsettings version="1.0">
     <videoextensions>
         <add>.mp3</add>
+        <add>.m4a</add>
     </videoextensions>
 </advancedsettings>

@@ -3,7 +3,7 @@ import xbmcgui
 from resources.lib import utilities as util
 
 ishanga = "Ishanga Player Service: "
-AudioExtensions = ['.mp3']
+AudioExtensions = ['.mp3', '.m4a']
 
 class MediaType:
     NONE = 0
@@ -21,15 +21,20 @@ def parse_media_type(filename):
         return MediaType.AUDIO
     return MediaType.VIDEO
 
-def activate_window(window_id, media_type):
+def _activate_window(window_id, media_type):
     if media_type == MediaType.AUDIO:
         xbmc.executebuiltin('Dialog.Close(all, true)')
-        xbmc.executebuiltin(f'ActivateWindow({util.IshangaWindowId.screensaver_window})')
+        xbmc.executebuiltin(f'ActivateWindow({util.IshangaWindowId.audio_screensaver_window})')
         return
 
     if not xbmcgui.getCurrentWindowId() == window_id: 
         xbmc.executebuiltin('Dialog.Close(all, true)')
         xbmc.executebuiltin(f'ActivateWindow({window_id})')
+
+# Sometimes kodi just doesn't successfully change window Id....
+def activate_window(window_id, media_type, num=1):
+    for _ in range(num):
+        _activate_window(window_id, media_type)
 
 class XBMCPlayer(xbmc.Player):
     def __init__(self):
@@ -42,10 +47,7 @@ class XBMCPlayer(xbmc.Player):
         filename = xbmc.Player().getPlayingFile()
         self.media_type = parse_media_type(filename)
 
-        activate_window(util.IshangaWindowId.screensaver_window, self.media_type)
-        activate_window(util.IshangaWindowId.screensaver_window, self.media_type)
-        activate_window(util.IshangaWindowId.screensaver_window, self.media_type)
-        activate_window(util.IshangaWindowId.screensaver_window, self.media_type)
+        activate_window(util.IshangaWindowId.screensaver_window, self.media_type, 5)
         xbmc.Player.pause(self)     
 
     def onPlayBackPaused(self):
