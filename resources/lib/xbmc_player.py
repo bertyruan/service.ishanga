@@ -1,5 +1,6 @@
 import xbmc
 import xbmcgui
+import xbmcaddon
 from resources.lib import utilities as util
 
 ishanga = "Ishanga Player Service: "
@@ -23,8 +24,10 @@ def parse_media_type(filename):
 
 def _activate_window(window_id, media_type):
     if media_type == MediaType.AUDIO:
+        idx = int(xbmcaddon.Addon().getSetting(util.audio_dot))
+        window_id = list(util.IshangaWindowId().audio_screensavers.values())[idx]
         xbmc.executebuiltin('Dialog.Close(all, true)')
-        xbmc.executebuiltin(f'ActivateWindow({util.IshangaWindowId.audio_screensaver_window})')
+        xbmc.executebuiltin(f'ActivateWindow({window_id})')
         return
 
     if not xbmcgui.getCurrentWindowId() == window_id: 
@@ -61,6 +64,3 @@ class XBMCPlayer(xbmc.Player):
         # xbmc.Player.pause(self)
         util.log(ishanga, "PLAYBACK SEEK")
         activate_window(util.KodiWindowId.video_window, self.media_type)
-
-    def onPlayBackEnded(self):
-        xbmc.executebuiltin('InhibitScreensaver(false)')
