@@ -46,20 +46,25 @@ class XBMCPlayer(xbmc.Player):
         super().__init__()
         self.media_type = MediaType.NONE
 
+    def onAVStarted(self):
+        util.log(ishanga, "ON AV STARTED")
+        activate_window_by_media(util.IshangaWindowId.screensaver_window, self.media_type, 5)
+
     def onPlayBackStarted(self):
-        util.log(ishanga, "VIDEO PLAYBACK STARTED")
         xbmc.executebuiltin('InhibitScreensaver(true)')
         filename = xbmc.Player().getPlayingFile()
         self.media_type = parse_media_type(filename)
+        util.log(ishanga, f"VIDEO PLAYBACK STARTED FOR {filename}")
 
         activate_window_by_media(util.IshangaWindowId.screensaver_window, self.media_type, 5)
         xbmc.Player.pause(self)     
 
     def onPlayBackPaused(self):
-        activate_window_by_media(util.IshangaWindowId.screensaver_window, self.media_type)
         util.log(ishanga, "VIDEO IS PAUSED. SCREENSAVER ON")
+        activate_window_by_media(util.IshangaWindowId.screensaver_window, self.media_type)
 
     def onPlayBackResumed(self):
+        util.log(ishanga, "VIDEO HAS RESUMED. SCREENSAVER OFF")
         activate_window_by_media(util.KodiWindowId.video_window, self.media_type)
 
     def onPlayBackSeek(self, time, seekOffset):
