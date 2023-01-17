@@ -16,7 +16,6 @@ xbmc.executebuiltin('InhibitIdleShutdown(true)')
 player = XBMCPlayer()
 monitor = xbmc.Monitor()
 
-# xbmc.executebuiltin(f'ActivateWindow({util.KodiWindowId.grey_audio_screensaver_window})')
 while not monitor.abortRequested():
     if monitor.waitForAbort(1):
         # del player

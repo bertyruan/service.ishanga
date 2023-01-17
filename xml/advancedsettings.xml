@@ -6,7 +6,8 @@
  -->
 <advancedsettings version="1.0">
     <videoextensions>
-        <add>.mp3</add>
-        <add>.m4a</add>
+        <!-- Don't add whitespaces -->
+        <add>.mp3|.m4a</add>
+        <remove></remove>
     </videoextensions>
 </advancedsettings>

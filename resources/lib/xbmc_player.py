@@ -22,22 +22,24 @@ def parse_media_type(filename):
         return MediaType.AUDIO
     return MediaType.VIDEO
 
-def _activate_window(window_id, media_type):
+def activate_window(window_id):
+    xbmc.executebuiltin('Dialog.Close(all, true)')
+    xbmc.executebuiltin(f'ActivateWindow({window_id})')
+
+def _activate_window_by_media(window_id, media_type):
     if media_type == MediaType.AUDIO:
         idx = int(xbmcaddon.Addon().getSetting(util.audio_dot))
         window_id = list(util.IshangaWindowId().audio_screensavers.values())[idx]
-        xbmc.executebuiltin('Dialog.Close(all, true)')
-        xbmc.executebuiltin(f'ActivateWindow({window_id})')
+        activate_window(window_id)
         return
 
     if not xbmcgui.getCurrentWindowId() == window_id: 
-        xbmc.executebuiltin('Dialog.Close(all, true)')
-        xbmc.executebuiltin(f'ActivateWindow({window_id})')
+        activate_window(window_id)
 
 # Sometimes kodi just doesn't successfully change window Id....
-def activate_window(window_id, media_type, num=1):
+def activate_window_by_media(window_id, media_type, num=1):
     for _ in range(num):
-        _activate_window(window_id, media_type)
+        _activate_window_by_media(window_id, media_type)
 
 class XBMCPlayer(xbmc.Player):
     def __init__(self):
@@ -45,22 +47,31 @@ class XBMCPlayer(xbmc.Player):
         self.media_type = MediaType.NONE
 
     def onPlayBackStarted(self):
-        util.log(ishanga, "PLAYBACK STARTED")
+        util.log(ishanga, "VIDEO PLAYBACK STARTED")
         xbmc.executebuiltin('InhibitScreensaver(true)')
         filename = xbmc.Player().getPlayingFile()
         self.media_type = parse_media_type(filename)
 
-        activate_window(util.IshangaWindowId.screensaver_window, self.media_type, 5)
+        activate_window_by_media(util.IshangaWindowId.screensaver_window, self.media_type, 5)
         xbmc.Player.pause(self)     
 
     def onPlayBackPaused(self):
-        activate_window(util.IshangaWindowId.screensaver_window, self.media_type)
+        activate_window_by_media(util.IshangaWindowId.screensaver_window, self.media_type)
         util.log(ishanga, "VIDEO IS PAUSED. SCREENSAVER ON")
 
     def onPlayBackResumed(self):
-        activate_window(util.KodiWindowId.video_window, self.media_type)
+        activate_window_by_media(util.KodiWindowId.video_window, self.media_type)
 
     def onPlayBackSeek(self, time, seekOffset):
         # xbmc.Player.pause(self)
-        util.log(ishanga, "PLAYBACK SEEK")
-        activate_window(util.KodiWindowId.video_window, self.media_type)
+        util.log(ishanga, "VIDEO PLAYBACK SEEK")
+        activate_window_by_media(util.KodiWindowId.video_window, self.media_type)
+
+    def onPlayBackEnded(self):
+        util.log(ishanga, "VIDEO PLAYBACK ENDED")
+        xbmc.executebuiltin(f'ActivateWindow({util.KodiWindowId.screensaver_window})')
+        # xbmc.executebuiltin(f'Playlist.Clear()')
+
+        # xbmc.executebuiltin(f'ActivateWindow({util.KodiWindowId.screensaver_window})')
+        # xbmc.executebuiltin('Container.Refresh()')
+        # xbmc.executebuiltin(f'Action(Stop)')
